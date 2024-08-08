@@ -10,7 +10,6 @@ This repository is a modified version of the SumatraPDF project with an addition
 ## How to Use
 
 1. **Build the Project**: Follow the standard build instructions for SumatraPDF.
-2. **Enable the Plugin**: After building, ensure the ChatGPT plugin is enabled in the settings.
 3. **Interact with ChatGPT**: Use the new ChatGPT interface within SumatraPDF to send and receive messages.
 
 ## Installation
