@@ -190,15 +190,21 @@ bool LoadSettings() {
     ResetCachedFonts();
 
     logf("LoadSettings('%s') took %.2f ms\n", settingsPath, TimeSinceInMs(timeStart));
-    //if(gTransWindow != nullptr){
+    // logf("zzzzz%f %f",gprefs->lastTransWindowPos.dx,gprefs->lastTransWindowPos.dy);
+    if(gprefs->lastTransWindowPos.dx == 0||gprefs->lastTransWindowPos.dy == 0){
+        gTransWindow.imguiWindowPos.x = 200;
+        gTransWindow.imguiWindowPos.y = 0;
+        gTransWindow.imguiWindowSize.x = 500;
+        gTransWindow.imguiWindowSize.y = 900;
+    }else{
         gTransWindow.imguiWindowPos.x = gprefs->lastTransWindowPos.x;
         gTransWindow.imguiWindowPos.y = gprefs->lastTransWindowPos.y;
         gTransWindow.imguiWindowSize.x = gprefs->lastTransWindowPos.dx;
         gTransWindow.imguiWindowSize.y = gprefs->lastTransWindowPos.dy;
-        SetWindowPos(gTransWindow.hwnd, NULL, gprefs->lastTransWindowPos.x, gprefs->lastTransWindowPos.y,
-                     gprefs->lastTransWindowPos.dx, gprefs->lastTransWindowPos.dy, SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+    SetWindowPos(gTransWindow.hwnd, NULL, gTransWindow.imguiWindowPos.x, gTransWindow.imguiWindowPos.y,
+                    gTransWindow.imguiWindowSize.x, gTransWindow.imguiWindowSize.y, SWP_NOZORDER | SWP_NOACTIVATE);
 
-    //}
     return true;
 }
 

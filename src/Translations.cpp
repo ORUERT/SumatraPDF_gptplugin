@@ -149,7 +149,9 @@ const char* GetTranslation(const char* s) {
             return tr;
         }
     }
+    //something not get translation yet
     ReportIf(true);
+    // logf("%s", s);
     return s;
 }
 
