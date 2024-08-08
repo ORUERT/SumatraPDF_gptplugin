@@ -28,6 +28,7 @@
 #include "Toolbar.h"
 #include "Translations.h"
 #include "uia/Provider.h"
+#include "wingui/TransView.h"
 
 SelectionOnPage::SelectionOnPage(int pageNo, const RectF* const rect) {
     this->pageNo = pageNo;
@@ -288,6 +289,25 @@ void CopySelectionToClipboard(MainWindow* win) {
         CopyImageToClipboard(bmp->GetBitmap(), true);
     }
     delete bmp;
+}
+void CopySelectionToChatWindow(MainWindow* win){
+    WindowTab* tab = win->CurrentTab();
+    ReportIf(tab->selectionOnPage->size() == 0 && win->mouseAction != MouseAction::SelectingText);
+
+    DisplayModel* dm = win->AsFixed();
+    TempStr selText = nullptr;
+    bool isTextOnlySelectionOut = false;
+    if (!gDisableDocumentRestrictions && (dm && !dm->GetEngine()->AllowsCopyingText())) {
+        NotificationCreateArgs args;
+        args.hwndParent = win->hwndCanvas;
+        args.msg = _TRA("Copying text was denied (copying as image only)");
+        ShowNotification(args);
+    } else {
+        selText = GetSelectedTextTemp(tab, "\r\n", isTextOnlySelectionOut);
+    }
+    if (!str::IsEmpty(selText)) {
+        AppendTextToChatWindow(selText);
+    }
 }
 
 void OnSelectAll(MainWindow* win, bool textOnly) {

@@ -7,11 +7,12 @@
 #include "utils/WinUtil.h"
 #include "utils/Dpi.h"
 #include "utils/WinDynCalls.h"
-
+#include <algorithm>
 #include "wingui/UIModels.h"
 
 #include "wingui/Layout.h"
 #include "wingui/WinGui.h"
+#include "MainWindow.h"
 
 #include "Theme.h"
 
@@ -545,7 +546,6 @@ void Wnd::SetPos(RECT* r) {
 
 void Wnd::SetBounds(Rect bounds) {
     dbglayoutf("WindowBaseLayout:SetBounds() %s %d,%d - %d, %d\n", GetKind(), bounds.x, bounds.y, bounds.dx, bounds.dy);
-
     lastBounds = bounds;
 
     bounds.x += insets.left;
@@ -553,7 +553,7 @@ void Wnd::SetBounds(Rect bounds) {
     bounds.dx -= (insets.right + insets.left);
     bounds.dy -= (insets.bottom + insets.top);
 
-    auto r = ToRECT(bounds);
+    RECT r = ToRECT(bounds);
     ::MoveWindow(hwnd, &r);
     // TODO: optimize if doesn't change position
     ::InvalidateRect(hwnd, nullptr, TRUE);
@@ -1044,7 +1044,7 @@ HWND Wnd::CreateCustom(const CreateCustomArgs& args) {
     WCHAR* titleW = ToWStrTemp(args.title);
 
     HWND hwndTmp = ::CreateWindowExW(exStyle, className, titleW, style, x, y, dx, dy, parent, m, inst, createParams);
-
+//
     ReportIf(!hwndTmp);
     // hwnd should be assigned in WM_CREATE
     ReportIf(hwndTmp != hwnd);
@@ -1696,7 +1696,7 @@ LRESULT Edit::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 
 bool Edit::HasBorder() {
     DWORD exStyle = GetWindowExStyle(hwnd);
-    bool res = bit::IsMaskSet<DWORD>(exStyle, WS_EX_CLIENTEDGE);
+    bool res = bitz::IsMaskSet<DWORD>(exStyle, WS_EX_CLIENTEDGE);
     return res;
 }
 
@@ -1771,6 +1771,17 @@ LRESULT Edit::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam) {
         return 0;
     }
     return 0;
+}
+
+// 构造函数  
+ChatMessage::ChatMessage(const char* content, int role, time_t timestamp) {  
+    this->content = str::Dup(content); // 复制字符串内容  
+    this->role = role;  
+    this->timestamp = timestamp;  
+}  
+
+ChatMessage::~ChatMessage(){
+    str::Free(content);
 }
 
 Kind kindListBox = "listbox";
@@ -1973,11 +1984,11 @@ bool Checkbox::IsChecked() const {
 
 Kind kindProgress = "progress";
 
-Progress::Progress() {
+MyProject::Progress::Progress() {
     kind = kindProgress;
 }
 
-HWND Progress::Create(const ProgressCreateArgs& args) {
+HWND MyProject::Progress::Create(const ProgressCreateArgs& args) {
     CreateControlArgs cargs;
     cargs.parent = args.parent;
     cargs.style = WS_CHILD | WS_VISIBLE;
@@ -1991,25 +2002,25 @@ HWND Progress::Create(const ProgressCreateArgs& args) {
     return hwnd;
 }
 
-Size Progress::GetIdealSize() {
+Size MyProject::Progress::GetIdealSize() {
     return {idealDx, idealDy};
 }
 
-void Progress::SetMax(int newMax) {
+void MyProject::Progress::SetMax(int newMax) {
     int min = 0;
     SendMessageW(hwnd, PBM_SETRANGE32, min, newMax);
 }
 
-void Progress::SetCurrent(int newCurrent) {
+void MyProject::Progress::SetCurrent(int newCurrent) {
     SendMessageW(hwnd, PBM_SETPOS, newCurrent, 0);
 }
 
-int Progress::GetMax() {
+int MyProject::Progress::GetMax() {
     auto max = (int)SendMessageW(hwnd, PBM_GETRANGE, FALSE /* get high limit */, 0);
     return max;
 }
 
-int Progress::GetCurrent() {
+int MyProject::Progress::GetCurrent() {
     auto current = (int)SendMessageW(hwnd, PBM_GETPOS, 0, 0);
     return current;
 }
@@ -2332,7 +2343,7 @@ HWND Splitter::Create(const SplitterCreateArgs& args) {
     ReportIf(!brush);
 
     DWORD style = GetWindowLong(args.parent, GWL_STYLE);
-    parentClipsChildren = bit::IsMaskSet<DWORD>(style, WS_CLIPCHILDREN);
+    parentClipsChildren = bitz::IsMaskSet<DWORD>(style, WS_CLIPCHILDREN);
 
     CreateCustomArgs cargs;
     // cargs.className = L"SplitterWndClass";
@@ -3837,6 +3848,7 @@ int RunMessageLoop(HACCEL accelTable, HWND hwndDialog) {
     return (int)msg.wParam;
 }
 
+
 #if 0
 // TODO: support accelerator table?
 // TODO: a better way to stop the loop e.g. via shared
@@ -3959,7 +3971,7 @@ void DeleteWnd(Checkbox** wnd) {
     *wnd = nullptr;
 }
 
-void DeleteWnd(Progress** wnd) {
+void DeleteWnd(MyProject::Progress** wnd) {
     delete *wnd;
     *wnd = nullptr;
 }

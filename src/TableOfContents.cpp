@@ -731,8 +731,8 @@ void LoadTocTree(MainWindow* win) {
 static void UpdateFont(HDC hdc, int fontFlags) {
     // TODO: this is a bit hacky, in that we use default font
     // and not the font from TreeCtrl. But in this case they are the same
-    bool italic = bit::IsSet(fontFlags, fontBitItalic);
-    bool bold = bit::IsSet(fontFlags, fontBitBold);
+    bool italic = bitz::IsSet(fontFlags, fontBitItalic);
+    bool bold = bitz::IsSet(fontFlags, fontBitBold);
     HFONT hfont = GetDefaultGuiFont(bold, italic);
     SelectObject(hdc, hfont);
 }

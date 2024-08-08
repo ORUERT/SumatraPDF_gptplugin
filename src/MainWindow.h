@@ -24,6 +24,10 @@ struct WindowTab;
 
 struct Annotation;
 struct ILinkHandler;
+struct TransWindow;
+struct ChatMessage;
+struct FileState;
+struct TransWindow;
 
 // Current action being performed with a mouse
 // clang-format off
@@ -65,6 +69,8 @@ struct StaticLinkInfo {
     StaticLinkInfo& operator=(const StaticLinkInfo& other);
     ~StaticLinkInfo();
 };
+
+
 
 /* Describes information related to one window with (optional) a document
    on the screen */
@@ -264,3 +270,6 @@ bool MainWindowStillValid(MainWindow*);
 MainWindow* FindMainWindowByController(DocController*);
 
 extern Vec<MainWindow*> gWindows;
+
+// 声明全局变量
+extern TransWindow gTransWindow;

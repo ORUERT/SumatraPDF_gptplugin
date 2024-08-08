@@ -68,8 +68,18 @@
 #include "ExternalViewers.h"
 #include "AppColors.h"
 #include "Theme.h"
-
+#include <wingui/TransView.h>
 #include "utils/Log.h"
+
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
+#include <windows.h>
+#include <tchar.h>
+#include <iostream>
 
 // return false if failed in a way that should abort the app
 static NO_INLINE bool MaybeMakePluginWindow(MainWindow* win, HWND hwndParent) {
@@ -527,6 +537,8 @@ static int RunMessageLoop() {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
         ResetTempAllocator();
+
+        gTransWindow.RenderImGui();
     }
 
     return (int)msg.wParam;

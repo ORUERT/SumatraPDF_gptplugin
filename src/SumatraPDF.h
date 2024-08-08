@@ -196,6 +196,7 @@ void SwitchToDisplayMode(MainWindow* win, DisplayMode displayMode, bool keepCont
 void MainWindowRerender(MainWindow* win, bool includeNonClientArea = false);
 LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);
 void ShutdownCleanup();
+void ShowOptionsDialog(MainWindow* win);
 bool DocIsSupportedFileType(Kind);
 TempStr GetLogFilePathTemp();
 void ShowSavedAnnotationsNotification(HWND hwndParent, const char* path);

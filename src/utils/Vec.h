@@ -17,7 +17,6 @@ class Vec {
     size_t capacityHint = 0;
     T* els = nullptr;
     T buf[16];
-
     // We always pad the elements with a single 0 value. This makes
     // Vec<char> and Vec<WCHAR> a C-compatible string. Although it's
     // not useful for other types, the code is simpler if we always do it

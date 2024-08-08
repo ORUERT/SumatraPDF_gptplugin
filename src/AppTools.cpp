@@ -158,7 +158,7 @@ TempStr GetPathInAppDataDirTemp(const char* name) {
 #define kRegCurrentVer "Software\\Microsoft\\Windows\\CurrentVersion"
 
 // clang-format off
-static TextEditor editorRules[] = {
+static sTextEditor editorRules[] = {
     {
         "Code.exe",
         R"(--goto "%f:%l")",
@@ -374,11 +374,11 @@ static void FindTextEditors() {
 
 // Detect TeX editors installed on the system and construct the
 // corresponding inverse search commands.
-void DetectTextEditors(Vec<TextEditor*>& res) {
+void DetectTextEditors(Vec<sTextEditor*>& res) {
     FindTextEditors();
     int n = (int)dimof(editorRules);
     for (int i = 0; i < n; i++) {
-        TextEditor* e = &editorRules[i];
+        sTextEditor* e = &editorRules[i];
         if (!e->openFileCmd) {
             continue;
         }

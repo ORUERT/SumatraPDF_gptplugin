@@ -55,7 +55,7 @@ struct InstallerWnd {
     Checkbox* checkboxRegisterSearchFilter = nullptr;
     Checkbox* checkboxRegisterPreview = nullptr;
     int currProgress = 0;
-    Progress* progressBar = nullptr;
+    MyProject::Progress* progressBar = nullptr;
     Button* btnExit = nullptr;
     Button* btnInstall = nullptr;
 
@@ -342,7 +342,7 @@ static void StartInstallation(InstallerWnd* wnd) {
     ProgressCreateArgs args;
     args.initialMax = nInstallationSteps;
     args.parent = wnd->hwnd;
-    wnd->progressBar = new Progress();
+    wnd->progressBar = new MyProject::Progress();
     wnd->progressBar->Create(args);
     RECT prc = {rc.x, rc.y, rc.x + rc.dx, rc.y + rc.dy};
     wnd->progressBar->SetBounds(prc);

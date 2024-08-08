@@ -32,8 +32,9 @@
 #include "Translations.h"
 #include "Accelerators.h"
 #include "Theme.h"
-
+#include "wingui/TransView.h"
 #include "utils/Log.h"
+#include <windows.h>
 
 // SumatraPDF.cpp
 extern void RememberDefaultWindowPosition(MainWindow* win);
@@ -189,6 +190,15 @@ bool LoadSettings() {
     ResetCachedFonts();
 
     logf("LoadSettings('%s') took %.2f ms\n", settingsPath, TimeSinceInMs(timeStart));
+    //if(gTransWindow != nullptr){
+        gTransWindow.imguiWindowPos.x = gprefs->lastTransWindowPos.x;
+        gTransWindow.imguiWindowPos.y = gprefs->lastTransWindowPos.y;
+        gTransWindow.imguiWindowSize.x = gprefs->lastTransWindowPos.dx;
+        gTransWindow.imguiWindowSize.y = gprefs->lastTransWindowPos.dy;
+        SetWindowPos(gTransWindow.hwnd, NULL, gprefs->lastTransWindowPos.x, gprefs->lastTransWindowPos.y,
+                     gprefs->lastTransWindowPos.dx, gprefs->lastTransWindowPos.dy, SWP_NOZORDER | SWP_NOACTIVATE);
+
+    //}
     return true;
 }
 

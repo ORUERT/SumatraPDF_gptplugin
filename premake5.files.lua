@@ -505,6 +505,24 @@ function lcms2_files()
   files{ "ext/lcms/include.*.h" }
 end
 
+function libcurl_files()
+  files_in_dir("ext/libcurl/include/curl", {
+    "*.c", "*.h"
+  })
+end
+
+function glew_files()
+  files_in_dir("ext/opengl/includes/GLEW", {
+    "*.c", "*.h"
+  })
+end
+
+function glfw_files()
+  files_in_dir("ext/libcurl/includes/GLFW", {
+    "*.c", "*.h"
+  })
+end
+
 function harfbuzz_files()
   files_in_dir("ext/harfbuzz/src", {
     "hb-aat-layout.cc",
@@ -650,6 +668,7 @@ function sumatrapdf_files()
     "SumatraPDF.h",
     "SumatraPDF.rc",
     "SumatraStartup.cpp",
+    "imgui_markdown.h",
     "SumatraConfig.cpp",
     "SumatraDialogs.*",
     "SumatraProperties.*",

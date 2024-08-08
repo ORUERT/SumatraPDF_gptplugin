@@ -22,6 +22,10 @@ struct ListBoxModelStrings : ListBoxModel {
     const char* Item(int) override;
 };
 
+// struct ChatWindowModel {
+//     Vec<ChatMessage*> message;
+// }
+
 using DropDownModelStrings = ListBoxModelStrings;
 
 void FillWithItems(HWND hwnd, ListBoxModel* model);

@@ -11,7 +11,6 @@
 #include "utils/HtmlPullParser.h"
 #include "utils/TrivialHtmlParser.h"
 #include "utils/WinUtil.h"
-
 #include "wingui/UIModels.h"
 
 #include "DocProperties.h"

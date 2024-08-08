@@ -3,7 +3,7 @@
 
 /* Simple functions to make it easier to set/clear/test for bits in integers */
 
-namespace bit {
+namespace bitz {
 
 template <typename T>
 void Set(T& v, int bitNo) {

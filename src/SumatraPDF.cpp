@@ -26,6 +26,7 @@
 #include "wingui/Layout.h"
 #include "wingui/WinGui.h"
 #include "wingui/WebView.h"
+#include "wingui/TransView.h"
 
 #include "wingui/LabelWithCloseWnd.h"
 #include "wingui/FrameRateWnd.h"
@@ -98,6 +99,7 @@ constexpr const char* kRestrictionsFileName = "sumatrapdfrestrict.ini";
 
 constexpr const char* kSumatraWindowTitle = "SumatraPDF";
 constexpr const WCHAR* kSumatraWindowTitleW = L"SumatraPDF";
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // used to show it in debug, but is not very useful,
 // so always disable
@@ -1551,6 +1553,7 @@ static MainWindow* CreateMainWindow() {
         DragAcceptFiles(win->hwndCanvas, TRUE);
     }
 
+    
     gWindows.Append(win);
     // needed for RTL languages
     UpdateWindowRtlLayout(win);
@@ -2746,6 +2749,7 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
         // and we skip the call here to avoid saving incomplete session info
         // (because some windows might have been closed already)
         SaveSettings();
+        gGlobalPrefs->lastTransWindowPos = Rect(gTransWindow.imguiWindowPos.x,gTransWindow.imguiWindowPos.y,gTransWindow.imguiWindowSize.x,gTransWindow.imguiWindowSize.y);
     }
     TabsOnCloseWindow(win);
 
@@ -2763,7 +2767,6 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
         DeleteMainWindow(win);
         DestroyWindow(hwndToDestroy);
     }
-
     if (lastWindow && quitIfLast) {
         logf("Calling PostQuitMessage() in CloseWindow() because closing lastWindow\n");
         ReportIf(gWindows.size() != 0);
@@ -3649,7 +3652,7 @@ static void OnMenuViewShowHideScrollbars() {
 
 #if 0 // note: was used in OpenAdvancedOptions()
 static void OpenFileWithTextEditor(const char* path) {
-    Vec<TextEditor*> editors;
+    Vec<sTextEditor*> editors;
     DetectTextEditors(editors);
     const char* cmd = editors[0]->openFileCmd;
 
@@ -3702,7 +3705,7 @@ void MaybeRedrawHomePage() {
     }
 }
 
-static void ShowOptionsDialog(MainWindow* win) {
+void ShowOptionsDialog(MainWindow* win) {
     ShowOptionsDialog(win->hwndFrame);
     MaybeRedrawHomePage();
 }
@@ -4746,6 +4749,27 @@ static void CopySelectionInTabToClipboard(WindowTab* tab) {
         ShowNotification(args);
     }
 }
+static void CopySelectionInTabToChatWindow(WindowTab* tab){
+
+    if (HwndIsFocused(tab->win->hwndFindEdit) || HwndIsFocused(tab->win->hwndPageEdit)) {
+        SendMessageW(GetFocus(), WM_COPY, 0, 0);
+        return;
+    }
+    if (!HasPermission(Perm::CopySelection)) {
+        return;
+    }
+    if (tab->selectionOnPage) {
+        CopySelectionToChatWindow(tab->win);
+        return;
+    }
+    if (tab->AsFixed()) {
+        NotificationCreateArgs args;
+        args.hwndParent = tab->win->hwndCanvas;
+        args.msg = _TRA("Select content with Ctrl+left mouse button to chatwindow");
+        args.timeoutMs = 2000;
+        ShowNotification(args);
+    }
+}
 
 static void OnMenuCustomZoom(MainWindow* win) {
     if (!win->IsDocLoaded()) {
@@ -5706,7 +5730,10 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         case CmdCopySelection:
             CopySelectionInTabToClipboard(tab);
             break;
-
+        case CmdCopyToChatWindow:
+            ShowNewWindow(tab->win);
+            CopySelectionInTabToChatWindow(tab);
+            break;
         case CmdSelectAll:
             OnSelectAll(win);
             break;
@@ -5858,6 +5885,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         case CmdEditAnnotations: {
             if (tab) {
                 Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
+                // ShowTranslationWindow(tab);
                 ShowEditAnnotationsWindow(tab);
                 if (annot) {
                     SetSelectedAnnotation(tab, annot);
@@ -5896,6 +5924,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 if (annot) {
                     bool openEdit = GetCommandBoolArg(cmdWithArg, kCmdArgOpenEdit, IsShiftPressed());
                     if (openEdit) {
+                        // ShowTranslationWindow(tab);
                         ShowEditAnnotationsWindow(tab);
                         SetSelectedAnnotation(tab, annot);
                     }
@@ -5949,6 +5978,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
     }
     if (lastCreatedAnnot) {
         UpdateAnnotationsList(tab->editAnnotsWindow);
+        // ShowTranslationWindow(tab);
         ShowEditAnnotationsWindow(tab);
         SetSelectedAnnotation(tab, lastCreatedAnnot);
     }
@@ -5970,7 +6000,8 @@ HWND gLastActiveFrameHwnd = nullptr;
 
 LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     MainWindow* win = FindMainWindowByHwnd(hwnd);
-
+    if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wp, lp))
+        return true;
     // DbgLogMsg("frame:", hwnd, msg, wp, lp);
     if (win && win->tabsInTitlebar) {
         bool callDefault = true;

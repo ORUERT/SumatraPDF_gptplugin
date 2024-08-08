@@ -61,7 +61,6 @@ ByteSlice SerializeGlobalPrefs(GlobalPrefs* prefs, const char* prevData) {
         // restore the correct fieldCount ASAP after serialization
         gFileStateInfo.fieldCount = fieldCount;
     }
-
     ByteSlice serialized = SerializeStruct(&gGlobalPrefsInfo, prefs, prevData);
 
     if (!prefs->rememberStatePerDocument || !prefs->rememberOpenedFiles) {

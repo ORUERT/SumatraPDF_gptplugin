@@ -158,6 +158,7 @@ Cmd* enum (e.g. CmdOpen) and a human-readable name (not used yet).
     V(CmdCreateAnnotInk, "Create Ink Annotation")                                  \
     V(CmdCreateAnnotPopup, "Create Popup Annotation")                              \
     V(CmdCreateAnnotFileAttachment, "Create File Attachment Annotation")           \
+    V(CmdCopyToChatWindow, "Copy To ChatWindow")                                   \
     V(CmdInvertColors, "Invert Colors")                                            \
     V(CmdTogglePageInfo, "Toggle Page Info")                                       \
     V(CmdToggleZoom, "Toggle Zoom")                                                \

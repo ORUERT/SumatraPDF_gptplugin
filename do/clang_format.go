@@ -47,6 +47,9 @@ func clangFormatFiles() {
 		`src\previewer\*.h`,
 		`ext\CHMLib\*.c`,
 		`ext\CHMLib\*.h`,
+		`ext\libcurl\src\*.c`,
+		`ext\libcurl\src\*.h`,
+		`ext\libcurl\include\curl\*.h`,
 		`ext\mupdf_load_system_font.c`,
 	}
 	isWhiteListed := func(s string) bool {

@@ -10,6 +10,7 @@ const DWORD UWM_DELAYED_CTRL_BACK = WM_APP + 0x300 + 1;
 TempStr WinMsgNameTemp(UINT);
 
 LRESULT TryReflectMessages(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+void UpdateScrollBar(HWND hwnd);
 enum WindowBorderStyle { kWindowBorderNone, kWindowBorderClient, kWindowBorderStatic };
 
 struct Wnd;
@@ -203,7 +204,6 @@ struct Static : Wnd {
 };
 
 //--- Button
-
 struct ButtonCreateArgs {
     HWND parent = nullptr;
     HFONT font = nullptr;
@@ -295,6 +295,16 @@ struct Edit : Wnd {
     bool HasBorder();
 };
 
+// 定义结构体  
+struct ChatMessage{  
+    char* content = nullptr; // 聊天内容  
+    int role;       // 角色  
+    time_t timestamp;          // 发送/接收时间  
+    
+    explicit ChatMessage(const char *content,int role,time_t timestamp);
+    ChatMessage() = default;
+    ~ChatMessage();
+};  
 //--- ListBox
 using ListBoxSelectionChangedHandler = std::function<void()>;
 using ListBoxDoubleClickHandler = std::function<void()>;
@@ -371,23 +381,23 @@ struct ProgressCreateArgs {
     HWND parent = nullptr;
     int initialMax = 0;
 };
+namespace MyProject {
+    struct Progress : Wnd {
+        Progress();
 
-struct Progress : Wnd {
-    Progress();
+        int idealDx = 0;
+        int idealDy = 0;
 
-    int idealDx = 0;
-    int idealDy = 0;
+        HWND Create(const ProgressCreateArgs&);
 
-    HWND Create(const ProgressCreateArgs&);
+        void SetMax(int);
+        void SetCurrent(int);
+        int GetMax();
+        int GetCurrent();
 
-    void SetMax(int);
-    void SetCurrent(int);
-    int GetMax();
-    int GetCurrent();
-
-    Size GetIdealSize() override;
-};
-
+        Size GetIdealSize() override;
+    };
+}
 //--- DropDown
 
 using DropDownSelectionChangedHandler = std::function<void()>;
@@ -800,7 +810,7 @@ void DeleteWnd(Static**);
 void DeleteWnd(Button**);
 void DeleteWnd(Edit**);
 void DeleteWnd(Checkbox**);
-void DeleteWnd(Progress**);
+void DeleteWnd(MyProject::Progress**);
 
 int RunMessageLoop(HACCEL accelTable, HWND hwndDialog);
 

@@ -7,7 +7,7 @@
 #include "utils/WinUtil.h"
 
 #include "Layout.h"
-
+#include "utils/Log.h"
 bool gEnableDebugLayout = false;
 
 void dbglayoutf(const char* fmt, ...) {
@@ -554,7 +554,7 @@ void VBox::SetBounds(Rect bounds) {
         return;
     }
     dbglayoutf("VBox:SetBounds() %d,%d - %d, %d %d children\n", bounds.x, bounds.y, bounds.dx, bounds.dy, n);
-
+    // logf("VBox:SetBounds() %d,%d - %d, %d %d children\n", bounds.x, bounds.y, bounds.dx, bounds.dy, n);
     if (alignMain == MainAxisAlign::Homogeneous) {
         auto gap = CalculateVGap(nullptr, nullptr);
         auto dy = bounds.dy + gap;
@@ -604,12 +604,15 @@ void VBox::SetBounds(Rect bounds) {
                 break;
         }
     }
-
+    // logf("extra Gap %d" , extraGap);
     // Position all of the child controls.
-    auto posY = bounds.y;
+    auto posY = bounds.y+10;//10 margin_top
     ILayout* previous = nullptr;
     for (int i = 0; i < n; i++) {
         auto& v = children[i];
+        // logf(" %s", v.layout->GetKind());
+        // logf("MaybeDeleteStaleDirectory: skipping '%s' because not manual-* or crsahinfo-*\n", v.layout->GetKind());
+
         if (IsCollapsed(v.layout)) {
             continue;
         }
@@ -620,10 +623,19 @@ void VBox::SetBounds(Rect bounds) {
             previous = v.layout;
         }
 
-        auto dy = v.size.dy;
+        int dy;
+        // logf(" %d %d %d %d \n",bounds.x, posY, bounds.Right(), posY + dy);
+        if(strcmp(v.layout->GetKind(), "chat")==0){
+            // dy = bounds.dy - bottomHeight - 100;
+            dy = 700;
+        }else{
+            logf("layout %d %d %d\n",bounds.dy,bottomHeight,v.size.dy);
+            dy = v.size.dy;
+        }
         SetBoundsForChild(i, v.layout, bounds.x, posY, bounds.Right(), posY + dy);
         posY += dy + extraGap;
     }
+    // logf("\n");
 }
 
 void VBox::SetBoundsForChild(int i, ILayout* v, int posX, int posY, int posX2, int posY2) const {

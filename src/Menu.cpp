@@ -748,6 +748,10 @@ static MenuDef menuDefContext[] = {
         CmdCopySelection,
     },
     {
+        _TRN("Copy to ChatWindow"),
+        CmdCopyToChatWindow,
+    },
+    {
         _TRN("Create Annotation From Selection"),
         (UINT_PTR)menuDefCreateAnnotFromSelection,
     },
@@ -900,6 +904,7 @@ static UINT_PTR disableIfDirectoryOrBrokenPDF[] = {
 
 UINT_PTR disableIfNoSelection[] = {
     CmdCopySelection,
+    // CmdCopyToChatWindow,
     CmdTranslateSelectionWithDeepL,
     CmdTranslateSelectionWithGoogle,
     CmdSearchSelectionWithWikipedia,
@@ -1851,6 +1856,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
     AnnotationType annotType = (AnnotationType)(cmd - CmdCreateAnnotText);
     Annotation* annot = nullptr;
     switch (cmd) {
+        case CmdCopyToChatWindow:
         case CmdCopySelection:
         case CmdTranslateSelectionWithGoogle:
         case CmdTranslateSelectionWithDeepL:
@@ -1952,6 +1958,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
             break;
     }
     if (annot) {
+        // ShowTranslationWindow(tab);
         ShowEditAnnotationsWindow(tab);
         SetSelectedAnnotation(tab, annot);
     }
@@ -2114,7 +2121,7 @@ void MenuCustomDrawMesureItem(HWND hwnd, MEASUREITEMSTRUCT* mis) {
     }
     auto modi = (MenuOwnerDrawInfo*)mis->itemData;
 
-    bool isSeparator = bit::IsMaskSet(modi->fType, (uint)MFT_SEPARATOR);
+    bool isSeparator = bitz::IsMaskSet(modi->fType, (uint)MFT_SEPARATOR);
     if (isSeparator) {
         mis->itemHeight = DpiScale(hwnd, 7);
         mis->itemWidth = DpiScale(hwnd, 33);
@@ -2166,30 +2173,30 @@ void MenuCustomDrawItem(HWND hwnd, DRAWITEMSTRUCT* dis) {
 
     // low-order word of the dwTypeData member is the bitmap handle
     // HBITMAP bmp = (HBITMAP)LOWORD(modi->dwTypeData) ?
-    // bool isBitmap = bit::IsMaskSet(modi->fType, (uint)MFT_BITMAP);
+    // bool isBitmap = bitz::IsMaskSet(modi->fType, (uint)MFT_BITMAP);
 
     // ???
-    // bool isMenuBarBreak = bit::IsMaskSet(modi->fType, (uint)MFT_MENUBARBREAK);
+    // bool isMenuBarBreak = bitz::IsMaskSet(modi->fType, (uint)MFT_MENUBARBREAK);
 
     // ???
-    // bool isMenuBreak = bit::IsMaskSet(modi->fType, (uint)MFT_MENUBREAK);
+    // bool isMenuBreak = bitz::IsMaskSet(modi->fType, (uint)MFT_MENUBREAK);
 
-    bool isSeparator = bit::IsMaskSet(modi->fType, (uint)MFT_SEPARATOR);
+    bool isSeparator = bitz::IsMaskSet(modi->fType, (uint)MFT_SEPARATOR);
 
     // default should be drawn in bold
-    // bool isDefault = bit::IsMaskSet(modi->fState, (uint)MFS_DEFAULT);
+    // bool isDefault = bitz::IsMaskSet(modi->fState, (uint)MFS_DEFAULT);
 
     // disabled should be drawn grayed out
-    bool isDisabled = bit::IsMaskSet(modi->fState, (uint)MFS_DISABLED);
+    bool isDisabled = bitz::IsMaskSet(modi->fState, (uint)MFS_DISABLED);
 
     // don't know what that means
-    // bool isHilited = bit::IsMaskSet(modi->fState, (uint)MFS_HILITE);
+    // bool isHilited = bitz::IsMaskSet(modi->fState, (uint)MFS_HILITE);
 
     // checked/unchecked state for check and radio menus
-    bool isChecked = bit::IsMaskSet(modi->fState, (uint)MFS_CHECKED);
+    bool isChecked = bitz::IsMaskSet(modi->fState, (uint)MFS_CHECKED);
 
     // if isChecked, show as radio button (i.e. circle)
-    bool isRadioCheck = bit::IsMaskSet(modi->fType, (uint)MFT_RADIOCHECK);
+    bool isRadioCheck = bitz::IsMaskSet(modi->fType, (uint)MFT_RADIOCHECK);
 
     auto hdc = dis->hDC;
     HFONT font = GetAppMenuFont();
@@ -2204,7 +2211,7 @@ void MenuCustomDrawItem(HWND hwnd, DRAWITEMSTRUCT* dis) {
         txtCol = ThemeWindowTextDisabledColor();
     }
 
-    bool isSelected = bit::IsMaskSet(dis->itemState, (uint)ODS_SELECTED);
+    bool isSelected = bitz::IsMaskSet(dis->itemState, (uint)ODS_SELECTED);
     if (isSelected) {
         // TODO: probably better colors
         std::swap(bgCol, txtCol);

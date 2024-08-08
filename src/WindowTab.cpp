@@ -23,6 +23,7 @@
 #include "Translations.h"
 #include "EditAnnotations.h"
 
+
 WindowTab::WindowTab(MainWindow* win) {
     this->win = win;
 }

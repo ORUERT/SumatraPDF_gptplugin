@@ -1416,7 +1416,7 @@ static void SetWindowStyle(HWND hwnd, DWORD flags, bool enable, int type) {
 
 bool IsWindowStyleSet(HWND hwnd, DWORD flags) {
     DWORD style = GetWindowLong(hwnd, GWL_STYLE);
-    return bit::IsMaskSet<DWORD>(style, flags);
+    return bitz::IsMaskSet<DWORD>(style, flags);
 }
 
 bool IsWindowStyleExSet(HWND hwnd, DWORD flags) {
@@ -1426,7 +1426,7 @@ bool IsWindowStyleExSet(HWND hwnd, DWORD flags) {
 
 bool IsRtl(HWND hwnd) {
     DWORD style = GetWindowLong(hwnd, GWL_EXSTYLE);
-    return bit::IsMaskSet<DWORD>(style, WS_EX_LAYOUTRTL);
+    return bitz::IsMaskSet<DWORD>(style, WS_EX_LAYOUTRTL);
 }
 
 void SetRtl(HWND hwnd, bool isRtl) {
@@ -1995,11 +1995,11 @@ TempStr HwndGetTextTemp(HWND hwnd) {
 }
 
 bool HwndHasFrameThickness(HWND hwnd) {
-    return bit::IsMaskSet(GetWindowLong(hwnd, GWL_STYLE), WS_THICKFRAME);
+    return bitz::IsMaskSet(GetWindowLong(hwnd, GWL_STYLE), WS_THICKFRAME);
 }
 
 bool HwndHasCaption(HWND hwnd) {
-    return bit::IsMaskSet(GetWindowLong(hwnd, GWL_STYLE), WS_CAPTION);
+    return bitz::IsMaskSet(GetWindowLong(hwnd, GWL_STYLE), WS_CAPTION);
 }
 
 void HwndSetVisibility(HWND hwnd, bool visible) {

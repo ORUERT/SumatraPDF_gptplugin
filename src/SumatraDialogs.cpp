@@ -737,6 +737,9 @@ static INT_PTR CALLBACK Dialog_Settings_Proc(HWND hDlg, UINT msg, WPARAM wp, LPA
             HwndSetDlgItemText(hDlg, IDC_SECTION_INVERSESEARCH, _TRA("Set inverse search command-line"));
             HwndSetDlgItemText(hDlg, IDC_CMDLINE_LABEL,
                                _TRA("Enter the command-line to invoke when you double-click on the PDF document:"));
+            HwndSetDlgItemText(hDlg, IDC_SECTION_CHATGPT, _TRA("ChatGpt"));
+            HwndSetDlgItemText(hDlg, IDB_CHATGPT_DOMAIN_LABEL, _TRA("Chatgpt Domin:"));
+            HwndSetDlgItemText(hDlg, IDB_CHATGPT_API_LABEL, _TRA("Chatgpt Api:"));
             HwndSetDlgItemText(hDlg, IDOK, _TRA("OK"));
             HwndSetDlgItemText(hDlg, IDCANCEL, _TRA("Cancel"));
 
@@ -745,7 +748,7 @@ static INT_PTR CALLBACK Dialog_Settings_Proc(HWND hDlg, UINT msg, WPARAM wp, LPA
                 // Try to select a correct default when first showing this dialog
                 const char* cmdLine = prefs->inverseSearchCmdLine;
                 HWND hwndComboBox = GetDlgItem(hDlg, IDC_CMDLINE);
-                Vec<TextEditor*> textEditors;
+                Vec<sTextEditor*> textEditors;
                 DetectTextEditors(textEditors);
                 StrVec detected;
                 for (auto e : textEditors) {
@@ -782,8 +785,15 @@ static INT_PTR CALLBACK Dialog_Settings_Proc(HWND hDlg, UINT msg, WPARAM wp, LPA
 
         case WM_COMMAND:
             switch (LOWORD(wp)) {
-                case IDOK:
+                case IDOK:{
                     prefs = (GlobalPrefs*)GetWindowLongPtr(hDlg, GWLP_USERDATA);
+                    std::wstring chatgptDomain(256, L'\0');
+                    GetDlgItemTextW(hDlg, IDB_CHATGPT_DOMAIN_INPUT, &chatgptDomain[0], 256);
+                    str::ReplaceWithCopy(&prefs->chatgptdomin,std::string(chatgptDomain.begin(), chatgptDomain.end()).c_str());
+                    std::wstring chatgptAPI(256, L'\0');
+                    GetDlgItemTextW(hDlg, IDB_CHATGPT_API_INPUT, &chatgptAPI[0], 256);
+                    str::ReplaceWithCopy(&prefs->chatgptapi,std::string(chatgptAPI.begin(), chatgptAPI.end()).c_str());
+                    
                     prefs->defaultDisplayModeEnum =
                         (DisplayMode)(SendDlgItemMessage(hDlg, IDC_DEFAULT_LAYOUT, CB_GETCURSEL, 0, 0) +
                                       (int)DisplayMode::Automatic);
@@ -803,7 +813,7 @@ static INT_PTR CALLBACK Dialog_Settings_Proc(HWND hDlg, UINT msg, WPARAM wp, LPA
                     }
                     EndDialog(hDlg, IDOK);
                     return TRUE;
-
+                }
                 case IDCANCEL:
                     EndDialog(hDlg, IDCANCEL);
                     return TRUE;

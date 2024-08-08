@@ -374,6 +374,9 @@ struct GlobalPrefs {
     int tabWidth;
     // the name of the theme to use
     char* theme;
+    // chatgpt domain & api
+    char* chatgptdomin;
+    char* chatgptapi;
     // if both favorites and bookmarks parts of sidebar are visible, this
     // is the height of bookmarks (table of contents) part
     int tocDy;
@@ -432,6 +435,8 @@ struct GlobalPrefs {
     int windowState;
     // default position (can be on any monitor)
     Rect windowPos;
+    // default transWindow position
+    Rect lastTransWindowPos;
     // information about opened files (in most recently used order)
     Vec<FileState*>* fileStates;
     // state of the last session, usage depends on RestoreSession
@@ -691,6 +696,8 @@ static const FieldInfo gGlobalPrefsFields[] = {
     {offsetof(GlobalPrefs, smoothScroll), SettingType::Bool, false},
     {offsetof(GlobalPrefs, tabWidth), SettingType::Int, 300},
     {offsetof(GlobalPrefs, theme), SettingType::String, (intptr_t) ""},
+    {offsetof(GlobalPrefs, chatgptdomin), SettingType::String, (intptr_t) ""},
+    {offsetof(GlobalPrefs, chatgptapi), SettingType::String, (intptr_t) ""},
     {offsetof(GlobalPrefs, tocDy), SettingType::Int, 0},
     {offsetof(GlobalPrefs, toolbarSize), SettingType::Int, 18},
     {offsetof(GlobalPrefs, treeFontName), SettingType::String, (intptr_t) "automatic"},
@@ -727,6 +734,7 @@ static const FieldInfo gGlobalPrefsFields[] = {
     {offsetof(GlobalPrefs, versionToSkip), SettingType::String, 0},
     {offsetof(GlobalPrefs, windowState), SettingType::Int, 1},
     {offsetof(GlobalPrefs, windowPos), SettingType::Compact, (intptr_t)&gRectInfo},
+    {offsetof(GlobalPrefs, lastTransWindowPos), SettingType::Compact, (intptr_t)&gRectInfo},
     {offsetof(GlobalPrefs, fileStates), SettingType::Array, (intptr_t)&gFileStateInfo},
     {offsetof(GlobalPrefs, sessionData), SettingType::Array, (intptr_t)&gSessionDataInfo},
     {offsetof(GlobalPrefs, reopenOnce), SettingType::StringArray, 0},
@@ -740,10 +748,10 @@ static const StructInfo gGlobalPrefsInfo = {
     "\0\0CheckForUpdates\0CustomScreenDPI\0DefaultDisplayMode\0DefaultZoom\0EnableTeXEnhancements\0EscToExit\0FullPathI"
     "nTitle\0InverseSearchCmdLine\0LazyLoading\0MainWindowBackground\0NoHomeTab\0ReloadModifiedDocuments\0RememberOpene"
     "dFiles\0RememberStatePerDocument\0RestoreSession\0ReuseInstance\0ShowMenubar\0ShowToolbar\0ShowFavorites\0ShowToc"
-    "\0ShowLinks\0ShowStartPage\0SidebarDx\0SmoothScroll\0TabWidth\0Theme\0TocDy\0ToolbarSize\0TreeFontName\0TreeFontSi"
+    "\0ShowLinks\0ShowStartPage\0SidebarDx\0SmoothScroll\0TabWidth\0Theme\0ChatgptDomin\0ChatgptApi\0TocDy\0ToolbarSize\0TreeFontName\0TreeFontSi"
     "ze\0UIFontSize\0UseSysColors\0UseTabs\0ZoomLevels\0ZoomIncrement\0\0FixedPageUI\0\0ComicBookUI\0\0ChmUI\0\0Annotat"
     "ions\0\0ExternalViewers\0\0ForwardSearch\0\0PrinterDefaults\0\0SelectionHandlers\0\0Shortcuts\0\0\0DefaultPassword"
-    "s\0UiLanguage\0VersionToSkip\0WindowState\0WindowPos\0FileStates\0SessionData\0ReopenOnce\0TimeOfLastUpdateCheck\0"
+    "s\0UiLanguage\0VersionToSkip\0WindowState\0WindowPos\0LastTransWindowPos\0FileStates\0SessionData\0ReopenOnce\0TimeOfLastUpdateCheck\0"
     "OpenCountWeek\0\0"};
 
 #endif

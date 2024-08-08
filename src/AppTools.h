@@ -9,7 +9,7 @@ enum class RegType {
     None,
 };
 
-struct TextEditor {
+struct sTextEditor {
     // Editor's binary file name
     const char* binaryFilename = nullptr;
     // Parameters to be passed to the editor;
@@ -33,7 +33,7 @@ void SetAppDataDir(const char* path);
 TempStr GetAppDataDirTemp();
 TempStr GetPathInAppDataDirTemp(const char* fileName);
 
-void DetectTextEditors(Vec<TextEditor*>&);
+void DetectTextEditors(Vec<sTextEditor*>&);
 char* BuildOpenFileCmd(const char* pattern, const char* path, int line, int col);
 
 bool ExtendedEditWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp);

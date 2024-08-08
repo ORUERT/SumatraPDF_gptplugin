@@ -62,6 +62,12 @@
 #define IDC_FAV_LABEL_WITH_CLOSE        1106
 #define IDB_RELOADING_CUE               2010
 
+#define IDB_CHATGPT_DOMAIN_LABEL        2070
+#define IDB_CHATGPT_DOMAIN_INPUT        2071
+#define IDB_CHATGPT_API_LABEL           2072
+#define IDB_CHATGPT_API_INPUT           2073
+#define IDC_SECTION_CHATGPT             2074
+
 #define IDC_STATIC                      -1
 
 #define IDR_DLL_PAK                     1

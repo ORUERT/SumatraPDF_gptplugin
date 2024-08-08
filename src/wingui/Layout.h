@@ -161,6 +161,8 @@ struct VBox : LayoutBase {
     int totalHeight = 0;
     int totalFlex = 0;
 
+    int bottomHeight = 0;
+
     VBox();
     ~VBox() override;
 

@@ -244,7 +244,7 @@ workspace "SumatraPDF"
     flags { "FatalCompileWarnings" }
   filter {}
 
-  exceptionhandling "Off"
+  exceptionhandling "On"
   rtti "Off"
 
   defines {
@@ -300,7 +300,7 @@ workspace "SumatraPDF"
     defines { "_CRT_SECURE_NO_WARNINGS" }
     disablewarnings { "4018", "4244", "4267", "4996" }
     files { "ext/CHMLib/*.c", "ext/CHMLib/*.h" }
-
+    
   project "engines"
     kind "StaticLib"
     language "C++"
@@ -312,7 +312,7 @@ workspace "SumatraPDF"
     }
     includedirs { "src", "src/wingui" }
     uses_zlib()
-    includedirs { "ext/synctex", "ext/libdjvu", "ext/CHMLib", "mupdf/include" }
+    includedirs { "ext/synctex", "ext/libdjvu", "ext/CHMLib", "mupdf/include"}
     engines_files()
     links { "chm" }
 
@@ -397,11 +397,27 @@ workspace "SumatraPDF"
     optconf()
     disablewarnings { "4131", "4244", "4245", "4267", "4996" }
     zlib_files()
-
+  project "libcurl"
+    kind "StaticLib"
+    language "C"
+    optconf()
+    -- disablewarnings { "4131", "4244", "4245", "4267", "4996" }
+    libcurl_files()
+  project "glew"
+    kind "StaticLib"
+    language "C"
+    optconf()
+    -- disablewarnings { "4131", "4244", "4245", "4267", "4996" }
+    glew_files()
+  project "glfw"
+    kind "StaticLib"
+    language "C"
+    optconf()
+    -- disablewarnings { "4131", "4244", "4245", "4267", "4996" }
+    glfw_files()
   -- to make Visual Studio solution smaller
   -- combine 9 libs only used by mupdf into a single project
   -- instead of having 9 projects
-
   project "mupdf-libs"
     kind "StaticLib"
     language "C"
@@ -756,7 +772,7 @@ workspace "SumatraPDF"
     filter {}
     -- TODO: "chm" should only be for Debug config but doing links { "chm" }
     -- in the filter breaks linking by setting LinkLibraryDependencies to false
-    links { "utils", "unrar", "libmupdf", "chm" }
+    links { "utils", "unrar", "libmupdf", "chm"}
     links { "comctl32", "gdiplus", "msimg32", "shlwapi", "version", "wininet" }
 
     project "PdfPreviewTest"
@@ -779,18 +795,35 @@ workspace "SumatraPDF"
     entrypoint "WinMainCRTStartup"
     flags { "NoManifest" }
     includedirs { "src", "mupdf/include" }
-
     webviewconf()
-
+    files { "ext/nlohmann/**/*.hpp" } 
     synctex_files()
     mui_files()
     wingui_files()
     uia_files()
     sumatrapdf_files()
 
+    includedirs { "ext/utf8" }
+
+    defines { "CURL_STATICLIB" }
+    includedirs {"ext/libcurl/include"}
+    libdirs{"ext/libcurl/lib"}
+    links{"libcurl_a.lib"}
+    filter "configurations:Release"
+        defines { "NDEBUG" }
+        optimize "On"  -- 启用优化
+        -- 忽略 MSVCRT 库
+        linkoptions { "/NODEFAULTLIB:LIBCMT" }
+    defines { "GLEW_STATIC" }
+    includedirs {"ext/opengl/includes"}
+    libdirs{"ext/opengl/libs"}
+    links{"glew32s.lib","glfw3_mt.lib","glfw3.lib","opengl32.lib"}
+    files {"ext/imgui/include/**.cpp","ext/imgui/include/**.h"}
+    includedirs {"ext/imgui/include"}
+
     defines { "_CRT_SECURE_NO_WARNINGS" }
     defines { "DISABLE_DOCUMENT_RESTRICTIONS" }
-
+    
     filter "configurations:ReleaseAnalyze"
       -- TODO: somehow /analyze- is default which creates warning about
       -- over-ride from cl.exe. Don't know how to disable the warning
@@ -801,11 +834,10 @@ workspace "SumatraPDF"
     -- for synctex
     disablewarnings { "4100", "4244", "4267", "4702", "4706", "4819" }
     uses_zlib()
-    includedirs { "ext/synctex" }
+    includedirs { "ext/synctex" , "ext/nlohmann" }
 
     -- for uia
     disablewarnings { "4302", "4311", "4838" }
-
     links_zlib()
     links {
       "engines", "libdjvu",  "libwebp", "dav1d", "libheif", "mupdf", "unarrlib", "utils", "unrar"
@@ -818,6 +850,7 @@ workspace "SumatraPDF"
     linkoptions { "/DELAYLOAD:gdiplus.dll /DELAYLOAD:msimg32.dll /DELAYLOAD:shlwapi.dll" }
     linkoptions { "/DELAYLOAD:urlmon.dll /DELAYLOAD:wininet.dll" }
     linkoptions { "/DELAYLOAD:uiautomationcore.dll" }
+    filter "system:windows"  
     filter "platforms:x64_asan"
       linkoptions { "/INFERASANLIBS" }
     filter {}
@@ -831,8 +864,7 @@ workspace "SumatraPDF"
     regconf()
     entrypoint "WinMainCRTStartup"
     flags { "NoManifest" }
-    includedirs { "src", "mupdf/include" }
-
+    includedirs { "src", "mupdf/include"}
     synctex_files()
     mui_files()
     wingui_files()
@@ -843,7 +875,7 @@ workspace "SumatraPDF"
 
     defines { "_CRT_SECURE_NO_WARNINGS" }
     defines { "DISABLE_DOCUMENT_RESTRICTIONS" }
-
+    -- defines { "CURL_STATICLIB" }
     filter "configurations:ReleaseAnalyze"
       -- TODO: somehow /analyze- is default which creates warning about
       -- over-ride from cl.exe. Don't know how to disable the warning
@@ -862,7 +894,7 @@ workspace "SumatraPDF"
     disablewarnings { "4819" }
 
     resdefines { "INSTALL_PAYLOAD_ZIP=.\\%{cfg.targetdir}\\InstallerData.dat" }
-
+    links { "libcurl", "ws2_32", "wldap32" }
     files { "src/MuPDF_Exports.cpp" }
 
     links {
@@ -872,7 +904,6 @@ workspace "SumatraPDF"
       "comctl32", "delayimp", "gdiplus", "msimg32", "shlwapi", "urlmon",
       "version", "wininet", "d2d1.lib", "uiautomationcore.lib"
     }
-    -- this is to prevent dll hijacking
     linkoptions { "/DELAYLOAD:libmupdf.dll" }
     linkoptions { "/DELAYLOAD:gdiplus.dll /DELAYLOAD:msimg32.dll /DELAYLOAD:shlwapi.dll" }
     linkoptions { "/DELAYLOAD:urlmon.dll /DELAYLOAD:wininet.dll" }

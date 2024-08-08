@@ -13,6 +13,12 @@
     <Filter Include="ext">
       <UniqueIdentifier>{7670880B-E279-887C-6BF5-9E7CD7FD937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ext\imgui">
+      <UniqueIdentifier>{607EC0FC-CCE8-7473-1527-261981D052C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ext\imgui\include">
+      <UniqueIdentifier>{D30596A5-3F1C-943B-8893-1F5DF4E864C3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ext\synctex">
       <UniqueIdentifier>{73E6124D-DF9B-8B42-6890-8519D4448246}</UniqueIdentifier>
     </Filter>
@@ -45,6 +51,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\ext\imgui\include\imconfig.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imgui.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imgui_impl_glfw.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imgui_impl_opengl3.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imgui_impl_opengl3_loader.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imgui_impl_win32.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imgui_internal.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imstb_rectpack.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imstb_textedit.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ext\imgui\include\imstb_truetype.h">
+      <Filter>ext\imgui\include</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\Accelerators.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -210,6 +246,9 @@
     <ClInclude Include="..\src\WindowTab.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\imgui_markdown.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\mui\Mui.h">
       <Filter>src\mui</Filter>
     </ClInclude>
@@ -255,6 +294,9 @@
     <ClInclude Include="..\src\wingui\Layout.h">
       <Filter>src\wingui</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\wingui\TransView.h">
+      <Filter>src\wingui</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\wingui\UIModels.h">
       <Filter>src\wingui</Filter>
     </ClInclude>
@@ -269,6 +311,30 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\ext\imgui\include\imgui.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\imgui\include\imgui_demo.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\imgui\include\imgui_draw.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\imgui\include\imgui_impl_glfw.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\imgui\include\imgui_impl_opengl3.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\imgui\include\imgui_impl_win32.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\imgui\include\imgui_tables.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ext\imgui\include\imgui_widgets.cpp">
+      <Filter>ext\imgui\include</Filter>
+    </ClCompile>
     <ClCompile Include="..\ext\synctex\synctex_parser.c">
       <Filter>ext\synctex</Filter>
     </ClCompile>
@@ -558,6 +624,9 @@
       <Filter>src\wingui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\wingui\Layout.cpp">
+      <Filter>src\wingui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\wingui\TransView.cpp">
       <Filter>src\wingui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\wingui\UIModels.cpp">

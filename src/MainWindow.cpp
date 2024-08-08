@@ -42,9 +42,8 @@
 #include "Translations.h"
 #include "uia/Provider.h"
 #include "Theme.h"
-
+#include "wingui/TransView.h"
 #include "utils/Log.h"
-
 struct LinkHandler : ILinkHandler {
     MainWindow* win = nullptr;
 
@@ -70,6 +69,7 @@ LinkHandler::~LinkHandler() {
 }
 
 Vec<MainWindow*> gWindows;
+TransWindow gTransWindow;
 
 StaticLinkInfo::StaticLinkInfo(Rect rect, const char* target, const char* infotip) {
     this->rect = rect;
@@ -152,6 +152,10 @@ MainWindow::~MainWindow() {
     delete frameRateWnd;
     delete infotip;
     delete tocTreeView;
+    //Todo cant put struct definition in .h so i cant use TransWindow in cpp
+    //delete transWindow;
+    
+    // DeleteVecMembers(messages);
     if (favTreeView) {
         delete favTreeView->treeModel;
         delete favTreeView;

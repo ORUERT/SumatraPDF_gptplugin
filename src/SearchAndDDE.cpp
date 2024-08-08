@@ -522,7 +522,7 @@ bool OnInverseSearch(MainWindow* win, int x, int y) {
 
     char* inverseSearch = gGlobalPrefs->inverseSearchCmdLine;
     if (!inverseSearch) {
-        Vec<TextEditor*> editors;
+        Vec<sTextEditor*> editors;
         DetectTextEditors(editors);
         inverseSearch = str::DupTemp(editors[0]->openFileCmd);
     }
